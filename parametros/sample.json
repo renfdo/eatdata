@@ -1,0 +1,126 @@
+[
+	{
+		"job_name": "user2",
+		"source": {
+			"type": "csv",
+			"options": {
+				"sep": ",",
+				"header":"true"
+			},
+			"path": "user/"
+		},
+		"destination": {
+			"path": "protheus/user/",
+			"table_name": "tb_user_protheus",
+
+			"raw":{
+				"database":"cdl_financeiro_raw"
+			},
+
+			"trusted":{
+				"ingest_type": "Full",
+				"database":"cdl_financeiro_trusted",
+				"key_column": ["TRNNSU"],
+				"order_column": ["TRNINCDAT"]
+			}
+		}
+	},
+	{
+		"job_name": "testeparquet",
+		"source": {
+			"type": "parquet",
+			"path": "testeparquet/",
+			"options": {
+				"sep": ",",
+				"header":"true"
+			}
+		},
+		"destination": {
+			"path": "protheus/testeparquet/",
+			"table_name": "testeparquet",
+			
+			"raw":{
+				"database":"cdl_financeiro_raw"
+			},
+			"trusted":{
+				"ingest_type": "Full",
+				"database":"cdl_financeiro_trusted",
+				"key_column": ["id"],
+				"order_column": ["DT_IMPORT"]
+			}
+		}
+	},
+	{
+		"job_name": "rent",
+		"system": "rent",
+
+		"source": {
+			"type": "csv",
+			"path": "rent/offset=2/",
+			"options": {
+				"sep": ",",
+				"header":"true"
+			}
+		},
+		"destination": {
+			"path": "rent/",
+			"table_name": "rent",
+			
+			"raw":{
+				"database":"stit_raw"
+			},
+			"trusted":{
+				"ingest_type": "Upsert",
+				"database":"stit_trusted",
+				"key_column": ["ID"],
+				"order_column": "DT_IMPORT",
+				"transformations":
+				[
+					{
+						"name": "CastDate",
+						"parameters":[
+							{"column_name":"DATE_RENT", "source_format": "yyyy-MM-dd"}
+						]
+					},
+
+					{
+						"name": "RenameCast",
+						"parameters":[
+							{"column_name":"DATE_RENT", "new_column_name":"DT_RENT", "data_type": "Date"}
+						]
+					}
+				]
+			}
+		}
+	},
+
+	{
+		"job_name": "SD2010",
+		"system": "protheus",
+		"source": {
+			"type": "jdbc",
+			"dbtype":"sqlserver",
+			"secret_name": "secret-sqlserver-dadosadv-financeiro",
+			"table":"SD2010",
+			"driver":"com.microsoft.sqlserver.jdbc.SQLServerDriver",
+			"options":{
+				"batchsize":"100000",
+				"fetchsize":"100000"
+			}
+		},
+		"destination": {
+			"path": "protheus/SD2010/",
+			"table_name": "SD2010",
+			
+			"raw":{
+				"database":"cdl_financeiro_raw"
+			},
+			"trusted":{
+				"ingest_type": "Full",
+				"database":"cdl_financeiro_trusted",
+				"key_column": ["id"],
+				"order_column": ["DT_IMPORT"]
+			}
+		}
+	}
+]

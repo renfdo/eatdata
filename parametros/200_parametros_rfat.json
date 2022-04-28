@@ -1,0 +1,1643 @@
+[
+    {
+        "job_name": "SB1200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SB1200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SB1200",
+            "table_name": "SB1200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "B1_CONINI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_DATASUB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_DATREF",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_DTCORTE",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_DTFIMNT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_DTREFP1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_UCALSTD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_UCOM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_UREV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_VIGENC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_XDATALT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_XDATCAD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_XDTADD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_XDTCAD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_XDTLIB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B1_XDTVIEX",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "B1_FILIAL",
+                    "B1_COD",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SFT200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM SFT200 (NOLOCK) WHERE 1=1 AND SFT200.D_E_L_E_T_ = '' AND FT_ENTRADA BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SFT200",
+            "table_name": "SFT200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "FT_DTCANC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "FT_DTFIMNT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "FT_EMINFE",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "FT_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "FT_ENTRADA",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "FT_FILIAL",
+                    "FT_TIPOMOV",
+                    "FT_SERIE",
+                    "FT_NFISCAL",
+                    "FT_CLIEFOR",
+                    "FT_LOJA",
+                    "FT_ITEM",
+                    "FT_PRODUTO",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SD2200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM SD2200 (NOLOCK) WHERE 1=1 AND D_E_L_E_T_ = '' AND D2_EMISSAO BETWEEN '20000101' AND '20220206' UNION ALL SELECT SD2.* FROM SF1200 SF1 (NOLOCK) INNER JOIN SD1200 SD1 (NOLOCK) ON SD1.D1_FILIAL = SF1.F1_FILIAL AND SD1.D1_DOC = SF1.F1_DOC AND SD1.D1_SERIE = SF1.F1_SERIE AND SD1.D1_FORNECE = SF1.F1_FORNECE AND SD1.D1_LOJA = SF1.F1_LOJA AND SD1.D_E_L_E_T_ = '' INNER JOIN SD2200 SD2 (NOLOCK) ON SD2.D2_FILIAL = SD1.D1_FILIAL AND SD2.D2_DOC = SD1.D1_NFORI AND SD2.D2_SERIE = SD1.D1_SERIORI AND SD2.D2_ITEM  = SD1.D1_ITEMORI INNER JOIN SF2200 SF2 (NOLOCK) ON SF2.F2_FILIAL = SD2.D2_FILIAL AND SF2.F2_DOC = SD2.D2_DOC AND SF2.F2_SERIE = SD2.D2_SERIE AND SF2.D_E_L_E_T_ = '' WHERE 1=1 AND SF1.D_E_L_E_T_ = '' AND SF2.D_E_L_E_T_ = '' AND SD1.D_E_L_E_T_ = '' AND SD2.D_E_L_E_T_ = '' AND F1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SD2200",
+            "table_name": "SD2200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "D2_DATAROM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_DFABRIC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_DTDIGIT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_DTFIMNT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_DTLCTCT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_DTVALID",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_ENVCNAB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D2_XDTVALI",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "D2_FILIAL",
+                    "D2_DOC",
+                    "D2_SERIE",
+                    "D2_CLIENTE",
+                    "D2_LOJA",
+                    "D2_ITEM",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SD1200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM SD1200 (NOLOCK) WHERE 1=1 AND D_E_L_E_T_ = '' AND D1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SD1200",
+            "table_name": "SD1200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "D1_DATACUS",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_DATFAB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_DATORI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_DFABRIC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_DTDIGIT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_DTFIMNT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_DTVALID",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_EXPSOP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "D1_XDTVALI",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "D1_FILIAL",
+                    "D1_DOC",
+                    "D1_SERIE",
+                    "D1_FORNECE",
+                    "D1_LOJA",
+                    "D1_ITEM",
+                    "D1_FORMUL",
+                    "D1_ITEMGRD",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SF2200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM SF2200 (NOLOCK) WHERE 1=1 AND D_E_L_E_T_ = '' AND F2_EMISSAO BETWEEN '20000101' AND '20220206' UNION ALL SELECT SF2.* FROM SF1200 SF1 (NOLOCK) INNER JOIN SD1200 SD1 (NOLOCK) ON SD1.D1_FILIAL = SF1.F1_FILIAL AND SD1.D1_DOC = SF1.F1_DOC AND SD1.D1_SERIE = SF1.F1_SERIE AND SD1.D1_FORNECE = SF1.F1_FORNECE AND SD1.D1_LOJA = SF1.F1_LOJA AND SD1.D_E_L_E_T_ = '' INNER JOIN SD2200 SD2 (NOLOCK) ON SD2.D2_FILIAL = SD1.D1_FILIAL AND SD2.D2_DOC = SD1.D1_NFORI AND SD2.D2_SERIE = SD1.D1_SERIORI AND SD2.D2_ITEM  = SD1.D1_ITEMORI INNER JOIN SF2200 SF2 (NOLOCK) ON SF2.F2_FILIAL = SD2.D2_FILIAL AND SF2.F2_DOC = SD2.D2_DOC AND SF2.F2_SERIE = SD2.D2_SERIE AND SF2.D_E_L_E_T_ = '' WHERE 1=1 AND SF1.D_E_L_E_T_ = '' AND SF2.D_E_L_E_T_ = '' AND SD1.D_E_L_E_T_ = '' AND SD2.D_E_L_E_T_ = '' AND F1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SF2200",
+            "table_name": "SF2200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "F2_DATAEXP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DATAIMP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DAUTNFE",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTBASE0",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTBASE1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTDIGIT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTENTR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTESERV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTFISEP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTINSEP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTLANC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTPREV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTREAJ",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_DTTXREF",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_EMINFE",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_XAGEND1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_XAGEND2",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_XAGEND3",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_XDTENTG",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F2_XSOLAGE",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "F2_FILIAL",
+                    "F2_DOC",
+                    "F2_SERIE",
+                    "F2_CLIENTE",
+                    "F2_LOJA",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SA1200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT A1_FILIAL,A1_COD,A1_LOJA,A1_VEND,A1_PESSOA,A1_NOME,A1_NREDUZ,A1_TIPO,A1_END,A1_MUN,A1_EST,A1_NATUREZ,A1_BAIRRO,A1_ESTADO,A1_CEP,A1_ATIVIDA,A1_CXPOSTA,A1_TEL,A1_TELEX,A1_FAX,A1_CONTATO,A1_CONTAT1,A1_ENDCOB,A1_BAICOB,A1_CEPCOB,A1_MUNCOB,A1_ESTCOB,A1_PAIS,A1_ENDREC,A1_ENDENT,A1_BAIENT,A1_MUNENT,A1_ESTENT,A1_CEPENT,A1_CONENT,A1_CGC,A1_INSCR,A1_INSCRM,A1_COMIS,A1_REGIAO,A1_CONTA,A1_BCO1,A1_BCO2,A1_BCO3,A1_BCO4,A1_BCO5,A1_TRANSP,A1_TPFRET,A1_COND,A1_DESC,A1_PRIOR,A1_RISCO,A1_LC,A1_VENCLC,A1_CLASSE,A1_MCOMPRA,A1_METR,A1_MSALDO,A1_NROCOM,A1_PRICOM,A1_ULTCOM,A1_TEMVIS,A1_ULTVIS,A1_FORMVIS,A1_TMPSTD,A1_TMPVIS,A1_CLASVEN,A1_MENSAGE,A1_NROPAG,A1_SALDUP,A1_SALPEDL,A1_TRANSF,A1_SUFRAMA,A1_ATR,A1_VACUM,A1_SALPED,A1_TITPROT,A1_DTULTIT,A1_CHQDEVO,A1_DTULCHQ,A1_MATR,A1_MAIDUPL,A1_TABELA,A1_INCISS,A1_SALDUPM,A1_PAGATR,A1_CARGO1,A1_CONTAT2,A1_CARGO2,A1_CONTAT3,A1_CARGO3,A1_SUPER,A1_RTEC,A1_ALIQIR,A1_OBSERV,A1_RG,A1_CALCSUF,A1_DTNASC,A1_SALPEDB,A1_CLIFAT,A1_GRPTRIB,A1_BAIRROC,A1_CEPC,A1_MUNC,A1_ESTC,A1_BAIRROE,A1_CEPE,A1_MUNE,A1_ESTE,A1_SATIV1,A1_SATIV2,A1_SATIV3,A1_SATIV4,A1_SATIV5,A1_SATIV6,A1_SATIV7,A1_SATIV8,A1_CODMARC,A1_CODAGE,A1_COMAGE,A1_TIPCLI,A1_EMAIL,A1_DEST_1,A1_CODMUN,A1_DEST_2,A1_HPAGE,A1_DEST_3,A1_CONDPAG,A1_DIASPAG,A1_OBS,A1_AGREG,A1_CODHIST,A1_RECINSS,A1_RECCOFI,A1_RECCSLL,A1_RECPIS,A1_CODOLD,A1_USERLGA,A1_USERLGI,A1_CLIOBS,A1_DTCOLET,A1_DTSAIDA,A1_NCOLETA,A1_CONTCOL,A1_NFNUM,A1_USOREVI,' ' AS A1_OBSCLI,A1_COMALT,A1_REDCOM,A1_DDI,A1_DDD,A1_PFISICA,A1_LCFIN,A1_MOEDALC,A1_RECISS,A1_TIPPER,A1_COD_MUN,A1_SALFIN,A1_SALFINM,A1_B2B,A1_BALANCA,A1_MODBA,A1_CARTORI,A1_ORIGIMP,A1_DATCAD,A1_NCARTOR,A1_PROMOTO,A1_CANAL,A1_GRPVEN,A1_CODMOB,A1_CLICNV,A1_SITUA,A1_SUBCOD,A1_ABATIMP,A1_TELEV,A1_MSBLQL,A1_INSCRUR,A1_NUMRA,A1_CDRDES,A1_FILDEB,A1_CODFOR,A1_ABICS,A1_EMAILFI,A1_EMAILDI,A1_OBCXMAS,A1_QTDLOJA,A1_TPESSOA,A1_PABCB,A1_TPISSRS,A1_CTARE,A1_RECFET,A1_GARCOM,A1_CAN002,A1_VEND002,A1_CAN015,A1_VEND015,A1_CODLOC,A1_SIMPNAC,A1_CONTRIB,A1_VINCULO,A1_DTINIV,A1_DTFIMV,A1_NUMEND,A1_COMEND,' ' AS A1_CLIOBS2,A1_OBSCLI2,A1_WKFCOB,A1_CODPAIS,A1_CONTAB,A1_BLEMAIL,A1_TIPOCLI,A1_IBGE,A1_SIMPLES,A1_CEINSS,A1_RECIRRF,A1_TIMEKEE,A1_PRSTSER,A1_ALIFIXA,A1_COMPLEM,A1_FOMEZER,A1_CNAE,A1_CLASCML,A1_PCTVPC,A1_FLCREDF,A1_RMA,A1_USERRMA,A1_SENHARM,A1_MAILRMA,A1_XDTENTG,A1_XDTSAIG,A1_XCMPAUT,A1_MLFWSL,A1_TRANSP2,A1_XDTALTF,A1_CODSIAF,A1_ENDNOT,A1_XVPCEXT,A1_CBO,A1_LOCCONS,A1_PERFIL,A1_HRTRANS,A1_UNIDVEN,A1_FRETISS,A1_XEXPZAW,A1_MLTPFAT,A1_XAGENDA,A1_CRDMA,A1_REGPB,A1_RFACS,A1_RFABOV,A1_ENTID,A1_INCULT,A1_USADDA,A1_MINIRF,A1_XVPCACM,A1_TPCLIML,A1_XGRPECO,A1_XENVDEP,A1_XSND2A,A1_XDEPCLA,A1_XDEPRIS,A1_XDEPUSR,A1_XDEPDAT,A1_XAGENC,A1_XCONTA,A1_XFLDEPS,A1_XCLIECM,A1_XBONUS,A1_XCEL,A1_XIDSITE,A1_XATUDEP,D_E_L_E_T_,R_E_C_N_O_,R_E_C_D_E_L_,A1_XPZOADC,A1_XTABVTO,A1_XSENHA,A1_BXVPC,A1_XTRAY,A1_XCATVIP,A1_XDATALT,A1_REGESIM,A1_PERCATM,A1_IPWEB,A1_PERFECP,A1_IRBAX,A1_INDRET,A1_OUTRMUN,A1_XTELCOB,A1_TPJ,A1_TRIBFAV,A1_XSCC,A1_CBAIRRE,A1_CODMUNE,A1_TIPPRFL,A1_PRF_VLD,A1_PRF_COD,' ' AS A1_PRF_OBS,A1_TDA,A1_FILTRF,A1_CODFID,A1_ORIGEM,A1_TPDP,A1_XSEGMTO,A1_XRMATOT,A1_XFATTOT,A1_XATBSEG,A1_XEND,A1_XNUMERO,A1_XBAIRRO,A1_XMUNICI,A1_XCOMPLE,A1_INOVAUT,A1_XULTATU,A1_IDHIST,A1_NIF,A1_MATFUN,A1_TPNFSE,A1_IENCONT,A1_RECFMD,A1_XTPELIM,A1_XCRDAUT,A1_XDTLC,A1_XMAATRA,A1_XPRAZMV,A1_XTPGAR,A1_XDTVGAR,A1_XVALGAR,A1_INCLTMG,A1_XGRTRIB,A1_XADMPRE,A1_XVPXMIN,A1_XEMAIL,A1_XVPXPAD,A1_XCTACRE,A1_RFUNDES,A1_RIMAMT,A1_RFASEMT,A1_VEND003,A1_VEND004,A1_VEND005,A1_DSCREG,A1_HRCAD,A1_DTCAD,A1_CLIPRI,A1_LOJPRI,A1_CODSEG,A1_TPREG,A1_MSEXP,A1_RESERVE,A1_ENTORI,A1_CODMEMB,A1_CHVCAM,A1_CODTER,A1_TPMEMB,A1_RESFAT,A1_NVESTN,A1_IMGUMOV,A1_IDESTN,A1_TPCAMP,A1_ORIGCT,A1_HREXPO,A1_ISSRSLC,A1_COMPENT,A1_XEXAUTO,A1_XEXCHEI,A1_XBLINDA,A1_XCTADEV,A1_MSDL FROM SA1200 (NOLOCK) WHERE 1=1 AND D_E_L_E_T_ = ''",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SA1200",
+            "table_name": "SA1200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "A1_DATCAD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTCAD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTCOLET",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTFIMV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTINIV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTNASC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTSAIDA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTULCHQ",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_DTULTIT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_MAILRMA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_PRF_VLD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_PRICOM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_ULTCOM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_ULTVIS",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_VENCLC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDATALT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDEPDAT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDTALTF",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDTENTG",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDTLC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDTSAIG",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XDTVGAR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A1_XULTATU",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "A1_FILIAL",
+                    "A1_COD",
+                    "A1_LOJA",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SC6200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT C6_FILIAL,C6_ITEM,C6_PRODUTO,C6_DESCRI,C6_UM,C6_LOCAL,C6_QTDVEN,C6_PRCVEN,C6_VALOR,C6_QTDLIB,C6_TES,C6_CF,C6_VAZIO,C6_NUMCART,C6_SEGUM,C6_UNSVEN,C6_QTDEMP,C6_QTDENT,C6_CLI,C6_DESCONT,C6_VALDESC,C6_ENTREG,C6_LA,C6_LOJA,C6_NOTA,C6_SERIE,C6_DATFAT,C6_NUM,C6_COMIS1,C6_COMIS2,C6_COMIS3,C6_COMIS4,C6_COMIS5,C6_PEDCLI,C6_PRUNIT,C6_BLOQUEI,C6_GEROUPV,C6_RESERVA,C6_OP,C6_OK,C6_NFORI,C6_SERIORI,C6_ITEMORI,C6_IPIDEV,C6_IDENTB6,C6_BLQ,C6_PICMRET,C6_CODISS,C6_GRADE,C6_ITEMGRD,C6_LOTECTL,C6_NUMLOTE,C6_DTVALID,C6_NUMORC,C6_CHASSI,C6_OPC,C6_LOCALIZ,C6_NUMSERI,C6_NUMOP,C6_ITEMOP,C6_CLASFIS,C6_QTDRESE,C6_NUMOS,C6_NUMOSFA,C6_CODFAB,C6_LOJAFA,C6_TPOP,C6_REVISAO,C6_USERLGI,C6_USERLGA,C6_QTDLIB2,C6_QTDENT2,C6_SERVIC,C6_ENDPAD,C6_CONTRT,C6_TPCONTR,C6_ITCONTR,C6_PROJPMS,C6_TASKPMS,C6_LICITA,C6_QTDEMP2,C6_VPCBON,C6_PROMO,C6_CONTRAT,C6_ITEMCON,C6_EDTPMS,C6_TRT,C6_PROJET,C6_ITPROJ,C6_POTENCI,C6_REGWMS,C6_ABSCINS,C6_ABATISS,C6_ABATMAT, ' ' AS C6_MOPC,C6_NUMCP,C6_NUMSC,C6_ITEMSC,C6_SUGENTR,C6_ICMSRET,C6_PRODORI,C6_ITEMED,C6_FUNRURA,C6_FETAB,C6_CODROM,C6_MLDESCO,C6_XDELHIS,C6_TPDEDUZ,C6_MOTDED,C6_FORDED,C6_LOJDED,C6_SERDED,C6_NFDED,C6_VLNFD,C6_PCDED,C6_VLDED,C6_ABATINS,C6_CODLAN,C6_XCCUSTO,C6_VPCEXTR,C6_XREFAUT,SC6200.D_E_L_E_T_,SC6200.R_E_C_N_O_,SC6200.R_E_C_D_E_L_,C6_BASVEIC,C6_TNATREC,C6_CNATREC,C6_GRPNATR,C6_DTFIMNT,C6_XESTMIN,C6_PROGRAM,C6_TURNO,C6_ITPC,C6_PVCOMOP,C6_VDMOST,C6_FILPED,C6_PEDCOM,' ' AS C6_VDOBS,C6_RATEIO,C6_ITLPRE,C6_D1SERIE,C6_D1DOC,C6_CODLPRE,C6_D1ITEM,C6_VLIMPOR,C6_FCICOD,C6_XFILA,C6_CODINF,C6_HORENT,C6_ITEMPC,C6_PMSID,C6_PEDVINC,C6_REVPROD,C6_PRODFIN,C6_NUMPCOM,C6_TPESTR,C6_CC,C6_CONTA,C6_ITEMCTA,C6_CLVL,C6_DATCPL,C6_HORCPL,C6_INTROT,C6_CATEG,C6_CTVAR,C6_PENE,C6_GCPLT,C6_GCPIT,C6_ALMTERC,C6_ITEMGAR,C6_ORCGAR,C6_CCUSTO,C6_SOLCOM,C6_CULTRA,C6_TPPROD,C6_SDOCORI,C6_SDOC,C6_SDOCDED,C6_SDOCSD1,C6_CSTPIS,C6_NRSEQCQ,C6_IPITRF,C6_DATAEMB,C6_TPREPAS,C6_OPER,C6_MSEXP,C6_XNUMID,C6_XKIT,C6_MSDL FROM SD2200 (NOLOCK) INNER JOIN SC6200 (NOLOCK) ON SD2200.D2_FILIAL = SC6200.C6_FILIAL AND SD2200.D2_COD = SC6200.C6_PRODUTO AND SD2200.D2_ITEM = SC6200.C6_ITEM AND SD2200.D2_PEDIDO = SC6200.C6_NUM WHERE 1=1 AND SD2200.D_E_L_E_T_ = '' AND SC6200.D_E_L_E_T_ = '' AND D2_EMISSAO BETWEEN '20000101' AND '20220206'  UNION ALL SELECT C6_FILIAL,C6_ITEM,C6_PRODUTO,C6_DESCRI,C6_UM,C6_LOCAL,C6_QTDVEN,C6_PRCVEN,C6_VALOR,C6_QTDLIB,C6_TES,C6_CF,C6_VAZIO,C6_NUMCART,C6_SEGUM,C6_UNSVEN,C6_QTDEMP,C6_QTDENT,C6_CLI,C6_DESCONT,C6_VALDESC,C6_ENTREG,C6_LA,C6_LOJA,C6_NOTA,C6_SERIE,C6_DATFAT,C6_NUM,C6_COMIS1,C6_COMIS2,C6_COMIS3,C6_COMIS4,C6_COMIS5,C6_PEDCLI,C6_PRUNIT,C6_BLOQUEI,C6_GEROUPV,C6_RESERVA,C6_OP,C6_OK,C6_NFORI,C6_SERIORI,C6_ITEMORI,C6_IPIDEV,C6_IDENTB6,C6_BLQ,C6_PICMRET,C6_CODISS,C6_GRADE,C6_ITEMGRD,C6_LOTECTL,C6_NUMLOTE,C6_DTVALID,C6_NUMORC,C6_CHASSI,C6_OPC,C6_LOCALIZ,C6_NUMSERI,C6_NUMOP,C6_ITEMOP,C6_CLASFIS,C6_QTDRESE,C6_NUMOS,C6_NUMOSFA,C6_CODFAB,C6_LOJAFA,C6_TPOP,C6_REVISAO,C6_USERLGI,C6_USERLGA,C6_QTDLIB2,C6_QTDENT2,C6_SERVIC,C6_ENDPAD,C6_CONTRT,C6_TPCONTR,C6_ITCONTR,C6_PROJPMS,C6_TASKPMS,C6_LICITA,C6_QTDEMP2,C6_VPCBON,C6_PROMO,C6_CONTRAT,C6_ITEMCON,C6_EDTPMS,C6_TRT,C6_PROJET,C6_ITPROJ,C6_POTENCI,C6_REGWMS,C6_ABSCINS,C6_ABATISS,C6_ABATMAT,' ' AS C6_MOPC,C6_NUMCP,C6_NUMSC,C6_ITEMSC,C6_SUGENTR,C6_ICMSRET,C6_PRODORI,C6_ITEMED,C6_FUNRURA,C6_FETAB,C6_CODROM,C6_MLDESCO,C6_XDELHIS,C6_TPDEDUZ,C6_MOTDED,C6_FORDED,C6_LOJDED,C6_SERDED,C6_NFDED,C6_VLNFD,C6_PCDED,C6_VLDED,C6_ABATINS,C6_CODLAN,C6_XCCUSTO,C6_VPCEXTR,C6_XREFAUT,SC6.D_E_L_E_T_,SC6.R_E_C_N_O_,SC6.R_E_C_D_E_L_,C6_BASVEIC,C6_TNATREC,C6_CNATREC,C6_GRPNATR,C6_DTFIMNT,C6_XESTMIN,C6_PROGRAM,C6_TURNO,C6_ITPC,C6_PVCOMOP,C6_VDMOST,C6_FILPED,C6_PEDCOM,' ' AS C6_VDOBS,C6_RATEIO,C6_ITLPRE,C6_D1SERIE,C6_D1DOC,C6_CODLPRE,C6_D1ITEM,C6_VLIMPOR,C6_FCICOD,C6_XFILA,C6_CODINF,C6_HORENT,C6_ITEMPC,C6_PMSID,C6_PEDVINC,C6_REVPROD,C6_PRODFIN,C6_NUMPCOM,C6_TPESTR,C6_CC,C6_CONTA,C6_ITEMCTA,C6_CLVL,C6_DATCPL,C6_HORCPL,C6_INTROT,C6_CATEG,C6_CTVAR,C6_PENE,C6_GCPLT,C6_GCPIT,C6_ALMTERC,C6_ITEMGAR,C6_ORCGAR,C6_CCUSTO,C6_SOLCOM,C6_CULTRA,C6_TPPROD,C6_SDOCORI,C6_SDOC,C6_SDOCDED,C6_SDOCSD1,C6_CSTPIS,C6_NRSEQCQ,C6_IPITRF,C6_DATAEMB,C6_TPREPAS,C6_OPER,C6_MSEXP,C6_XNUMID,C6_XKIT,C6_MSDL FROM SF1200 SF1 (NOLOCK) INNER JOIN SD1200 SD1 (NOLOCK) ON SD1.D1_FILIAL = SF1.F1_FILIAL AND SD1.D1_DOC = SF1.F1_DOC AND SD1.D1_SERIE = SF1.F1_SERIE AND SD1.D1_FORNECE = SF1.F1_FORNECE AND SD1.D1_LOJA = SF1.F1_LOJA AND SD1.D_E_L_E_T_ = '' INNER JOIN SFT200 SFT (NOLOCK) ON SFT.FT_FILIAL = SD1.D1_FILIAL AND SFT.FT_TIPOMOV = 'E' AND SFT.FT_SERIE = SD1.D1_SERIE AND SFT.FT_NFISCAL = SD1.D1_DOC AND SFT.FT_PRODUTO = SD1.D1_COD AND SFT.FT_CLIEFOR = SD1.D1_FORNECE AND SFT.FT_LOJA = SD1.D1_LOJA AND SFT.FT_ITEM = SD1.D1_ITEM AND SFT.D_E_L_E_T_ = '' INNER JOIN SB1200 SB1 (NOLOCK) ON SB1.B1_FILIAL = SD1.D1_FILIAL AND SB1.B1_COD = SD1.D1_COD AND SB1.D_E_L_E_T_ = '' INNER JOIN SF4200 SF4 (NOLOCK) ON SF4.F4_FILIAL = SD1.D1_FILIAL AND SF4.F4_CODIGO = SD1.D1_TES AND SF4.D_E_L_E_T_ = '' LEFT OUTER JOIN SD2200 SD2 (NOLOCK) ON SD2.D2_FILIAL = SD1.D1_FILIAL AND SD2.D2_DOC  = SD1.D1_NFORI AND SD2.D2_SERIE = SD1.D1_SERIORI AND SD2.D2_ITEM = SD1.D1_ITEMORI LEFT OUTER JOIN SF2200 SF2 (NOLOCK) ON SF2.F2_FILIAL = SD2.D2_FILIAL AND SF2.F2_DOC = SD2.D2_DOC AND SF2.F2_SERIE = SD2.D2_SERIE AND SF2.D_E_L_E_T_ = '' INNER JOIN SC6200 SC6 (NOLOCK) ON SC6.C6_FILIAL = SD2.D2_FILIAL AND SC6.C6_NUM = SD2.D2_PEDIDO AND SC6.C6_ITEM = SD2.D2_ITEMPV AND SD2.D2_COD = SC6.C6_PRODUTO AND SC6.D_E_L_E_T_ = '' INNER JOIN SC5200 SC5 (NOLOCK) ON SC5.C5_FILIAL = SD2.D2_FILIAL AND SC5.C5_NUM = SD2.D2_PEDIDO AND SC5.C5_CLIENTE = SD2.D2_CLIENTE AND SC5.C5_LOJACLI = SD2.D2_LOJA AND SC5.D_E_L_E_T_ = '' WHERE 1=1 AND SF1.D_E_L_E_T_ = '' AND SF2.D_E_L_E_T_ = '' AND SD1.D_E_L_E_T_ = '' AND SD2.D_E_L_E_T_ = '' AND F1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SC6200",
+            "table_name": "SC6200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "C6_DATAEMB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C6_DATCPL",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C6_DATFAT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C6_DTFIMNT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C6_DTVALID",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C6_ENTREG",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C6_SUGENTR",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "C6_FILIAL",
+                    "C6_NUM",
+                    "C6_ITEM",
+                    "C6_PRODUTO",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SC5200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT SC5200.* FROM SD2200 (NOLOCK) INNER JOIN SC5200 (NOLOCK) ON SD2200.D2_FILIAL = SC5200.C5_FILIAL AND SD2200.D2_PEDIDO = SC5200.C5_NUM WHERE 1=1 AND SD2200.D_E_L_E_T_ = '' AND SC5200.D_E_L_E_T_ = '' AND D2_EMISSAO BETWEEN '20000101' AND '20220206' UNION ALL SELECT SC5.* FROM SF1200 SF1 (NOLOCK) INNER JOIN SD1200 SD1 (NOLOCK) ON SD1.D1_FILIAL = SF1.F1_FILIAL AND SD1.D1_DOC = SF1.F1_DOC AND SD1.D1_SERIE = SF1.F1_SERIE AND SD1.D1_FORNECE = SF1.F1_FORNECE AND SD1.D1_LOJA = SF1.F1_LOJA AND SD1.D_E_L_E_T_ = '' INNER JOIN SFT200 SFT (NOLOCK) ON SFT.FT_FILIAL = SD1.D1_FILIAL AND SFT.FT_TIPOMOV = 'E' AND SFT.FT_SERIE = SD1.D1_SERIE AND SFT.FT_NFISCAL = SD1.D1_DOC AND SFT.FT_PRODUTO = SD1.D1_COD AND SFT.FT_CLIEFOR = SD1.D1_FORNECE AND SFT.FT_LOJA = SD1.D1_LOJA AND SFT.FT_ITEM = SD1.D1_ITEM AND SFT.D_E_L_E_T_ = '' INNER JOIN SB1200 SB1 (NOLOCK) ON SB1.B1_FILIAL = SD1.D1_FILIAL AND SB1.B1_COD = SD1.D1_COD AND SB1.D_E_L_E_T_ = '' INNER JOIN SF4200 SF4 (NOLOCK) ON SF4.F4_FILIAL = SD1.D1_FILIAL AND SF4.F4_CODIGO = SD1.D1_TES AND SF4.D_E_L_E_T_ = '' LEFT OUTER JOIN SD2200 SD2 (NOLOCK) ON SD2.D2_FILIAL = SD1.D1_FILIAL AND SD2.D2_DOC  = SD1.D1_NFORI AND SD2.D2_SERIE = SD1.D1_SERIORI AND SD2.D2_ITEM = SD1.D1_ITEMORI LEFT OUTER JOIN SF2200 SF2 (NOLOCK) ON SF2.F2_FILIAL = SD2.D2_FILIAL AND SF2.F2_DOC = SD2.D2_DOC AND SF2.F2_SERIE = SD2.D2_SERIE AND SF2.D_E_L_E_T_ = '' INNER JOIN SC6200 SC6 (NOLOCK) ON SC6.C6_FILIAL = SD2.D2_FILIAL AND SC6.C6_NUM = SD2.D2_PEDIDO AND SC6.C6_ITEM = SD2.D2_ITEMPV AND SC6.D_E_L_E_T_ = '' INNER JOIN SC5200 SC5 (NOLOCK) ON SC5.C5_FILIAL = SD2.D2_FILIAL AND SC5.C5_NUM = SD2.D2_PEDIDO AND SC5.C5_CLIENTE = SD2.D2_CLIENTE AND SC5.C5_LOJACLI = SD2.D2_LOJA AND SC5.D_E_L_E_T_ = '' WHERE 1=1 AND SF1.D_E_L_E_T_ = '' AND SF2.D_E_L_E_T_ = '' AND SD1.D_E_L_E_T_ = '' AND SD2.D_E_L_E_T_ = '' AND F1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SC5200",
+            "table_name": "SC5200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "C5_DATA1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_DATA2",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_DATA3",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_DATA4",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_DTESERV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_DTLANC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_DTTXREF",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_FECENT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_SUGENT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_TRANDAT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_XDATDEL",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_XDTCAMP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_XDTEXP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_XFILDAT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_XFIMRES",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C5_XINIRES",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "C5_FILIAL",
+                    "C5_NUM",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SF1200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT F1_FILIAL,F1_DOC,F1_SERIE,F1_FORNECE,F1_LOJA,F1_COND,F1_DUPL,F1_EMISSAO,F1_EST,F1_FRETE,F1_DESPESA,F1_BASEICM,F1_VALICM,F1_BASEIPI,F1_VALIPI,F1_VALMERC,F1_VALBRUT,F1_TIPO,F1_DESCONT,F1_NFORI,F1_SERIORI,F1_DTDIGIT,F1_CPROVA,F1_BRICMS,F1_ICMSRET,F1_BASEFD,F1_DTLANC,F1_OK,F1_ORIGLAN,F1_TX,F1_CONTSOC,F1_IRRF,F1_FORMUL,F1_NFORIG,F1_SERORIG,F1_ESPECIE,F1_IMPORT,F1_II,F1_REMITO,F1_BASIMP2,F1_BASIMP3,F1_BASIMP4,F1_BASIMP5,F1_BASIMP6,F1_VALIMP1,F1_VALIMP2,F1_VALIMP3,F1_VALIMP4,F1_VALIMP5,F1_VALIMP6,F1_ORDPAGO,F1_HORA,F1_INSS,F1_ISS,F1_BASIMP1,F1_HAWB,F1_TIPO_NF,F1_IPI,F1_ICMS,F1_PESOL,F1_FOB_R,F1_SEGURO,F1_CIF,F1_DT_CONT,F1_DT_ESTO,F1_MOEDA,F1_PREFIXO,F1_STATUS,F1_VALEMB,F1_BASEIR,F1_BASEINS,F1_RECBMTO,F1_CTR_NFC,F1_TXMOEDA,F1_USERLGA,F1_USERLGI,F1_STATCON,F1_QTDCONF,F1_PEDVEND,F1_TIPODOC,F1_TIPOREM,F1_GNR,F1_APROV,F1_FIMP,F1_DATAIMP,F1_HORAIMP,F1_USERIMP,F1_NUMRA,F1_DOCFOL,F1_VERBAFO,F1_BASEPS3,F1_VALPS3,F1_BASECF3,F1_VALCF3,F1_VNAGREG,F1_NFELETR,F1_EMINFE,F1_HORNFE,F1_CODNFE,F1_CREDNFE,F1_NUMRPS,F1_RECISS,F1_VALFDS,F1_ESTCRED,F1_VALPIS,F1_VALCOFI,F1_VALCSLL,F1_TPNFEXP,F1_NUMFATF,F1_SERFATF,F1_CHVNFE,' ' AS F1_X_OBSNF,F1_VALIRF,F1_NUMMOV,F1_FILORIG,F1_NODIA,F1_DIACTB,F1_TRANSP,F1_PLIQUI,F1_PBRUTO,F1_ESPECI1,F1_VOLUME1,F1_ESPECI2,F1_VOLUME2,F1_ESPECI3,F1_VOLUME3,F1_ESPECI4,F1_VOLUME4,F1_XNROPRO,F1_XPEDCOM,F1_XDELHIS,F1_TPFRETE,F1_VALFAB,F1_VALFAC,F1_VALFET,F1_PLACA,F1_XRECBTO,D_E_L_E_T_,R_E_C_N_O_,R_E_C_D_E_L_,F1_VALINA,F1_BASEINA,F1_BASPIS,F1_BASCOFI,F1_BASCSLL,F1_RECOPI,F1_TPCTE,F1_BASEFUN,F1_EVENFLG,F1_IDCCE,F1_FLAGRGS,F1_IDRGS,F1_CODRGS,F1_DAUTNFE,F1_HAUTNFE,F1_VALPEDG,F1_FORRET,F1_LOJARET,F1_FORENT,F1_LOJAENT,F1_VLSENAR,F1_NUMAIDF,F1_ANOAIDF,F1_XCAMPAN,F1_MENNOTA,F1_MENPAD,F1_MSIDENT,F1_NUMTRIB,F1_CLIORI,F1_LOJAORI,F1_XSTAWMS,F1_IDRECOP,F1_INCISS,F1_ESTPRES,F1_VLCIDE,F1_BASECID,F1_IDSA1,F1_IDSA2,F1_IDSED,F1_VLCPM,F1_BASECPM,F1_VALFMP,F1_BASEFMP,F1_VALFMD,F1_DTCPISS,F1_CLIDEST,F1_LOJDEST,F1_ESTDES,F1_XREC01,F1_XREC02,F1_XHRIALC,F1_XDTIALC,F1_HCOUNT,F1_AGENDA,F1_VALFUND,F1_VALIMA,F1_VALFASE,F1_XUSUINC,F1_DOCISEN,F1_VERBAIS,F1_ORIGEM,F1_MOTIVO,F1_MOTRET,F1_SIMPNAC,F1_TPCOMPL,F1_BOMDES,F1_DEVMERC,F1_MODAL,F1_VEICUL1,F1_HISTRET,F1_CODROM,F1_VEICUL2,F1_VEICUL3,F1_SDOC,F1_SDOCORI,F1_SDOCMAN,F1_SERMDF,F1_NUMMDF,F1_BFCPANT,F1_VFCPANT,F1_BSFCPST,F1_BSFCCMP,F1_BASFECP,F1_UFORITR,F1_MUORITR,F1_UFDESTR,F1_MUDESTR,F1_IVTENV,F1_IDNF,F1_MSEXP,F1_SUBSERI,F1_CODA1U,F1_INDPRES,F1_MSDL FROM SF1200 (NOLOCK) WHERE 1=1 AND D_E_L_E_T_ = '' AND F1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SF1200",
+            "table_name": "SF1200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "F1_DATAIMP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_DAUTNFE",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_DT_CONT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_DT_ESTO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_DTCPISS",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_DTDIGIT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_DTLANC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_EMINFE",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_RECBMTO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "F1_XDTIALC",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "F1_FILIAL",
+                    "F1_DOC",
+                    "F1_SERIE",
+                    "F1_FORNECE",
+                    "F1_LOJA",
+                    "F1_FORMUL",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SC9200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT SC9200.* FROM SD2200 (NOLOCK) INNER JOIN SC9200 (NOLOCK) ON SD2200.D2_FILIAL = SC9200.C9_FILIAL AND SD2200.D2_COD = SC9200.C9_PRODUTO AND SD2200.D2_ITEM = SC9200.C9_ITEM  AND SD2200.D2_PEDIDO = SC9200.C9_PEDIDO WHERE 1=1 AND SD2200.D_E_L_E_T_ = '' AND SC9200.D_E_L_E_T_ = '' AND D2_EMISSAO BETWEEN '20000101' AND '20220206' UNION ALL SELECT SC9.* FROM SF1200 SF1 (NOLOCK) INNER JOIN SD1200 SD1 (NOLOCK) ON SD1.D1_FILIAL = SF1.F1_FILIAL AND SD1.D1_DOC = SF1.F1_DOC AND SD1.D1_SERIE = SF1.F1_SERIE AND SD1.D1_FORNECE = SF1.F1_FORNECE AND SD1.D1_LOJA = SF1.F1_LOJA AND SD1.D_E_L_E_T_ = '' INNER JOIN SFT200 SFT (NOLOCK) ON SFT.FT_FILIAL = SD1.D1_FILIAL AND SFT.FT_TIPOMOV = 'E' AND SFT.FT_SERIE = SD1.D1_SERIE AND SFT.FT_NFISCAL = SD1.D1_DOC AND SFT.FT_PRODUTO = SD1.D1_COD AND SFT.FT_CLIEFOR = SD1.D1_FORNECE AND SFT.FT_LOJA = SD1.D1_LOJA AND SFT.FT_ITEM = SD1.D1_ITEM AND SFT.D_E_L_E_T_ = '' INNER JOIN SB1200 SB1 (NOLOCK) ON SB1.B1_FILIAL = SD1.D1_FILIAL AND SB1.B1_COD = SD1.D1_COD AND SB1.D_E_L_E_T_ = '' INNER JOIN SF4200 SF4 (NOLOCK) ON SF4.F4_FILIAL = SD1.D1_FILIAL AND SF4.F4_CODIGO = SD1.D1_TES AND SF4.D_E_L_E_T_ = '' LEFT OUTER JOIN SD2200 SD2 (NOLOCK) ON SD2.D2_FILIAL = SD1.D1_FILIAL AND SD2.D2_DOC  = SD1.D1_NFORI AND SD2.D2_SERIE = SD1.D1_SERIORI AND SD2.D2_ITEM = SD1.D1_ITEMORI LEFT OUTER JOIN SF2200 SF2 (NOLOCK) ON SF2.F2_FILIAL = SD2.D2_FILIAL AND SF2.F2_DOC = SD2.D2_DOC AND SF2.F2_SERIE = SD2.D2_SERIE AND SF2.D_E_L_E_T_ = '' INNER JOIN SC6200 SC6 (NOLOCK) ON SC6.C6_FILIAL = SD2.D2_FILIAL AND SC6.C6_NUM = SD2.D2_PEDIDO AND SC6.C6_ITEM = SD2.D2_ITEMPV AND SD2.D2_COD = SC6.C6_PRODUTO AND SC6.D_E_L_E_T_ = '' INNER JOIN SC5200 SC5 (NOLOCK) ON SC5.C5_FILIAL = SD2.D2_FILIAL AND SC5.C5_NUM = SD2.D2_PEDIDO AND SC5.C5_CLIENTE = SD2.D2_CLIENTE AND SC5.C5_LOJACLI = SD2.D2_LOJA AND SC5.D_E_L_E_T_ = '' INNER JOIN SC9200 SC9 (NOLOCK) ON SC9.C9_FILIAL = SC6.C6_FILIAL AND SC9.C9_PEDIDO = SC6.C6_NUM AND SC9.C9_ITEM = SC6.C6_ITEM AND SC9.C9_PRODUTO = SC6.C6_PRODUTO AND SC9.D_E_L_E_T_ = '' WHERE 1=1 AND SF1.D_E_L_E_T_ = '' AND SF2.D_E_L_E_T_ = '' AND SD1.D_E_L_E_T_ = '' AND SD2.D_E_L_E_T_ = '' AND F1_DTDIGIT BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SC9200",
+            "table_name": "SC9200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "C9_DATALIB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C9_DTVALID",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "C9_DATENT",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "C9_FILIAL",
+                    "C9_PEDIDO",
+                    "C9_ITEM",
+                    "C9_SEQUEN",
+                    "C9_PRODUTO",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SA3200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SA3200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SA3200",
+            "table_name": "SA3200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "A3_ADMISS",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A3_DTUMOV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A3_XDATALT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A3_XDATCAD",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "A3_FILIAL",
+                    "A3_COD",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SB2200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SB2200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SB2200",
+            "table_name": "SB2200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "B2_USAI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_DINVENT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_DTINV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_DINVFIM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_DULT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_XDTFIN",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_XDTINI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "B2_DMOV",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "B2_FILIAL",
+                    "B2_LOCAL",
+                    "B2_COD",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "PAG200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM PAG200 (NOLOCK) WHERE 1=1 AND PAG200.D_E_L_E_T_ = '' AND PAG_DATA BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/PAG200",
+            "table_name": "PAG200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "PAG_DATA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PAG_DATPRV",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "SF4200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SF4200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SF4200",
+            "table_name": "SF4200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "F4_DTFIMNT",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "F4_FILIAL",
+                    "F4_CODIGO",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SE4200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SE4200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SE4200",
+            "table_name": "SE4200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": []
+                    }
+                ],
+                "key_column": [
+                    "E4_FILIAL",
+                    "E4_CODIGO",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "PB9200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT PB9_FILIAL, PB9_NUMERO, PB9_PEDIDO, PB9_ITEM, PB9_PRODUT, PB9_QUANT, PB9_DATROM, PB9_HORROM, PB9_NFISCA, PB9_SERINF, PB9_QTDCON, PB9_DATCON, PB9_HORCON, PB9_DATAFC, PB9_HORAFC, PB9_USUCON, PB9_DATIMP, PB9_HORIMP, PB9_USUIMP, PB9_FLGIMP, PB9_USUCOM, PB9_USUROM, PB9_MULTIP, PB9_PONTO, PB9_DESCPO, PB9_MOTDIV, PB9_TRANSP, PB9_USUDEL, PB9_DATDEL, PB9_DATLIB, PB9_HORLIB, PB9_USULIB, PB9_FLGEXP, PB9_NUMSEQ, PB9_OBSEXP, D_E_L_E_T_, R_E_C_N_O_, PB9_USUEXP, PB9_DATEXP, PB9_LIBSTS, PB9_AGEND1, PB9_HRAGE1, PB9_USUARO, PB9_DATARO, PB9_HORARO, PB9_MOTCAN, PB9_SUBTRI, PB9_TIPCAN, ' ' AS PB9_EXTRAT, PB9_MESA, PB9_HROEXP, PB9_BUFFER, PB9_DOCA, PB9_DTEXPF, PB9_HREXPF, PB9_USRTRA, PB9_DTETRA, PB9_HRETRA, PB9_ATNSEQ, PB9_DTRETC, PB9_HTRETC, PB9_USRETC, PB9_MTRETC, PB9_PENDEN, PB9_DTLFSF, PB9_HRLFSF, PB9_TIPO, PB9_ROMANT, PB9_NUMID, PB9_VOLCFR, PB9_NFFORC, PB9_ERROCK, PB9_SISFAT, PB9_MSEXP, PB9_MSDL FROM PB9200 WHERE 1=1 AND PB9200.D_E_L_E_T_ = '' AND PB9_DATROM BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/PB9200",
+            "table_name": "PB9200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "PB9_DATROM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DATCON",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DATAFC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DATIMP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DATLIB",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DATEXP",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_AGEND1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DATARO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DTEXPF",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DTETRA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DTRETC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PB9_DTLFSF",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "PBE200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM PBE200 (NOLOCK) WHERE 1=1 AND PBE200.D_E_L_E_T_ = '' AND PBE_EMICON BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/PBE200",
+            "table_name": "PBE200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "PBE_EMICON",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PBE_DTIMP",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "SA2200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT A2_FILIAL,A2_COD,A2_LOJA,A2_NOME,A2_NREDUZ,A2_PFISICA,A2_OPER,A2_END,A2_NR_END,A2_BAIRRO,A2_MUN,A2_EST,A2_ESTADO,A2_CEP,A2_CX_POST,A2_TIPO,A2_CGC,A2_TEL,A2_TELEX,A2_INSCR,A2_FAX,A2_INSCRM,A2_CONTATO,A2_BANCO,A2_SWIFT,A2_CONTA,A2_AGENCIA,A2_NATUREZ,A2_TRANSP,A2_PRIOR,A2_RISCO,A2_COND,A2_LC,A2_MATR,A2_MCOMPRA,A2_METR,A2_MSALDO,A2_NROCOM,A2_PRICOM,A2_ULTCOM,A2_SALDUP,A2_DESVIO,A2_SALDUPM,A2_NUMCON,A2_TIPCON,A2_TIPORUR,A2_RECISS,A2_PAIS,A2_ID_FBFN,A2_STATUS,A2_GRUPO,A2_DEPTO,A2_ATIVIDA,A2_ORIG_1,A2_ORIG_2,A2_ORIG_3,A2_REPRES,A2_REPCONT,A2_REPRTEL,A2_VINCULA,A2_REPRFAX,A2_REPR_CO,A2_REPR_EN,A2_REPRMUN,A2_REPREST,A2_REPRCEP,A2_REPBAIR,A2_REPPAIS,A2_ID_REPR,A2_REPR_BA,A2_REPR_AG,A2_REPR_EM,A2_REPRCGC,A2_RET_PAI,A2_COMI_SO,A2_EMAIL,A2_HPAGE,A2_CODMUN,A2_CONTCOM,A2_FATAVA,A2_DTAVA,A2_DTVAL,A2_OK,A2_RECINSS,A2_UNFEDRP,A2_GRPTRIB,A2_CONTAB,A2_CLIQF,A2_CODOLD,A2_USERLGA,A2_USERLGI,A2_BANC,A2_AGEN,A2_FAVOREC,A2_COMINF,A2_DDI,A2_DDD,A2_PLGRUPO,A2_CODBLO,A2_PAISORI,A2_ROYALTY,A2_TXTRIBU,A2_B2B,A2_IMPIP,A2_PLCRRES,A2_PLFIL,A2_SIGLCR,A2_CONREG,A2_DATBLO,A2_PLPEDES,A2_CIVIL,A2_ROYMIN,A2_VPCPON,A2_VPCBON,A2_DATCAD,A2_AFASTEC,A2_AFATEND,A2_AFCADRF,A2_AFCAPAC,A2_AFCONE,A2_AFGAR,A2_AFPRAZO,A2_AFQUAL,A2_AFRESPP,A2_AFVEND,' ' AS A2_AFCOMEN,A2_AFRESP,A2_AFSETOR,A2_AFDATA,A2_RECPIS,A2_RECCOFI,A2_RECCSLL,A2_DTREAVA,A2_ATIVO,A2_SATIV1,A2_PAGAMEN,A2_COD_MUN,A2_ENDCOMP,A2_GRPDEP,A2_SUBCOD,A2_MSBLQL,A2_TIPAWB,A2_RECSEST,A2_FILDEB,A2_ABICS,A2_MNOTA,A2_HFRAZ1,A2_HFCON1,A2_HFFON1,A2_HFRAZ2,A2_HFCON2,A2_HFFON2,A2_HFTCOND,A2_HFPRZDE,A2_HFAMOST,A2_HFAPAMO,A2_HFSERAS,A2_HFOBSER,A2_HFAPROV,A2_HFDATA,A2_HFSTATU,A2_XDVCONT,A2_NUMRA,A2_FRETISS,A2_PABCB,A2_TPISSRS,A2_CTARE,A2_RECFET,A2_FUNDFIX,A2_SIMPNAC,A2_VINCULO,A2_DTINIV,A2_DTFIMV,A2_CODLOC,A2_CODPAIS,A2_TPESSOA,A2_CODFAV,A2_LOJFAV,A2_NUMDEP,A2_IBGE,A2_PRSTSER,A2_COMPLEM,A2_INSCMU,A2_FOMEZER,A2_CNAE,A2_CALCIRF,A2_FABRICA,A2_RECCIDE,A2_CBO,A2_CODINSS,A2_ENDNOT,A2_IRPROG,A2_RFACS,A2_RFABOV,A2_CODSIAF,A2_INCULT,A2_MINIRF,A2_XCTACRE,D_E_L_E_T_,R_E_C_N_O_,R_E_C_D_E_L_,A2_REGESIM,A2_CONTPRE,A2_INCLTMG,A2_CPOMSP,A2_TPLOGR,A2_CGCEX,A2_NEMPR,A2_TPCON,A2_DTINIR,A2_DTFIMR,A2_PAISEX,A2_NIFEX,A2_LOGEX,A2_NUMEX,A2_COMPLR,A2_BAIEX,A2_POSEX,A2_CIDEX,A2_ESTEX,A2_TELRE,A2_BREEX,A2_TPREX,A2_TRBEX,A2_CPFIRP,A2_XBBNAME,A2_XBBADDR,A2_XBBCODE,A2_XBBACNO,A2_XBENAME,A2_SITESBH,A2_TPJ,A2_TRIBFAV,A2_XSCC,A2_CODADM,A2_MJURIDI,A2_RNTRC,A2_CONFFIS,A2_FILTRF,A2_DTRNTRC,A2_MUNSC,A2_CCICMS,A2_TIPCTA,A2_ZFUNCIO,A2_MINPUB,A2_RETISI,A2_ISICM,A2_STRNTRC,A2_TPRNTRC,A2_TPCONTA,A2_IDHIST,A2_EQPTAC,A2_APOLICE,A2_LOCQUIT,A2_RESPTRI,A2_RECFMD,A2_XCODRC,A2_INOVAUT,A2_DTCONV,A2_NOMRESP,A2_CARGO,A2_EMAILFI,A2_EMAILDI,A2_MOTNIF,A2_XLIBCMX,A2_XULBCMX,A2_CONTRIB,A2_RFUNDES,A2_RIMAMT,A2_RFASEMT,A2_CALCINP,A2_INDRUR,A2_UFFIC,A2_SUBCON,A2_ISSRSLC,A2_TPREG,A2_DTNASC,A2_OCORREN,A2_CATEG,A2_CODNIT,A2_DESPORT,A2_FORMPAG,A2_CLIENTE,A2_DEDBSPC,A2_CODFI,A2_FORNEMA,A2_PAGGFE,A2_DVCTA,A2_DVAGE,A2_LOJCLI,A2_MSBLQD,A2_REGPB,A2_DRPEXP,A2_CPRB,A2_TPENT,A2_XVLRPED,A2_XVLRFOR,A2_XSENHA,A2_CPFRUR,A2_XCTADEV,A2_MSEXP,A2_GROSSIR,A2_INDCP,A2_MSDL FROM SA2200 (NOLOCK) WHERE 1=1",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SA2200",
+            "table_name": "SA2200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "A2_AFDATA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DATBLO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DATCAD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTAVA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTCONV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTFIMR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTFIMV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTINIR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTINIV",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTNASC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTREAVA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTRNTRC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_DTVAL",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_HFDATA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_MSBLQD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_PRICOM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "A2_ULTCOM",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "A1_FILIAL",
+                    "A1_COD",
+                    "A1_LOJA",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SB9200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT * FROM SB9200 (NOLOCK) WHERE 1=1 AND SB9200.D_E_L_E_T_ = '' AND B9_DATA BETWEEN '20220131' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SB9200",
+            "table_name": "SB9200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "key_column": [
+                    "B9_FILIAL",
+                    "B9_COD",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SE1200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "query": "SELECT E1_NOMCLI,E1_EMISSAO,E1_VENCTO,E1_PREFIXO,E1_NUM,E1_FILIAL,E1_PARCELA,E1_NUMBCO,E1_IDCNAB,E1_VALOR,E1_TIPO,E1_NATUREZ,E1_PORTADO,E1_AGEDEP,E1_CLIENTE,E1_LOJA,E1_VENCREA,E1_IRRF,E1_ISS,E1_INDICE,E1_BAIXA,E1_NUMBOR,E1_DATABOR,E1_EMIS1,E1_HIST,E1_LA,E1_LOTE,E1_MOTIVO,E1_MOVIMEN,E1_OP,E1_SITUACA,E1_CONTRAT,E1_SALDO,E1_SUPERVI,E1_VEND1,E1_VEND2,E1_VEND3,E1_VEND4,E1_VEND5,E1_COMIS1,E1_COMIS2,E1_COMIS3,E1_COMIS4,E1_COMIS5,E1_DESCONT,E1_MULTA,E1_JUROS,E1_CORREC,E1_VALLIQ,E1_VENCORI,E1_CONTA,E1_VALJUR,E1_PORCJUR,E1_MOEDA,E1_BASCOM1,E1_BASCOM2,E1_BASCOM3,E1_BASCOM4,E1_BASCOM5,E1_OK,E1_FATPREF,E1_FATURA,E1_PROJETO,E1_CLASCON,E1_VALCOM1,E1_VALCOM2,E1_VALCOM3,E1_VALCOM4,E1_VALCOM5,E1_OCORREN,E1_INSTR1,E1_INSTR2,E1_PEDIDO,E1_DTVARIA,E1_VARURV,E1_NUMNOTA,E1_SERIE,E1_VLCRUZ,E1_DTFATUR,E1_IDENTEE,E1_STATUS,E1_ORIGEM,E1_NUMCART,E1_FLUXO,E1_DESCFIN,E1_DIADESC,E1_CARTAO,E1_CARTVAL,E1_VLRREAL,E1_CARTAUT,E1_ADM,E1_TRANSF,E1_BCOCHQ,E1_AGECHQ,E1_ORDPAGO,E1_CTACHQ,E1_NUMLIQ,E1_INSS,E1_FILORIG,E1_TIPOFAT,E1_TIPOLIQ,E1_CSLL,E1_FLAGFAT,E1_COFINS,E1_PIS,E1_USERLGI,E1_USERLGA,E1_MESBASE,E1_ANOBASE,E1_PLNUCOB,E1_CODINT,E1_CODEMP,E1_MATRIC,E1_ACRESC,E1_SDACRES,E1_DECRESC,E1_SDDECRE,E1_MULTNAT,E1_MSFIL,E1_MSEMP,E1_PROJPMS,E1_DTDISPO,E1_ULOCORR,' ' AS E1_HISTCOB,E1_XMOTPRO,E1_TIPODES,E1_TXMOEDA,E1_DESDOBR,E1_NRDOC,E1_MODSPB,E1_PLCOEMP,E1_PLTPCOE,E1_CODCOR,E1_PARCCSS,E1_CODORCA,E1_CODIMOV,E1_RECIBO,E1_DTACRED,E1_EMITCHQ,E1_FILDEB,E1_NUMSOL,E1_NUMRA,E1_DATAEDI,E1_SERREC,E1_INSCRIC,E1_CODBAR,E1_CHQDEV,E1_CODDIG,E1_LIDESCF,E1_VLBOLSA,E1_NUMCRD,E1_VLFIES,E1_DEBITO,E1_CCD,E1_ITEMD,E1_CLVLDB,E1_CREDIT,E1_CCC,E1_ITEMC,E1_CLVLCR,E1_DESCON1,E1_DESCON2,E1_DTDESC3,E1_DTDESC1,E1_DTDESC2,E1_VLMULTA,E1_DESCON3,E1_MOTNEG,E1_PARCFET,E1_NFELETR,E1_FETHAB,E1_APLVLMN,E1_NCART1,E1_NCART2,E1_EMPBX,E1_SABTPIS,E1_SABTCOF,E1_SABTCSL,E1_FORNISS,E1_PARTOT,E1_SITFAT,E1_BASEPIS,E1_BASECOF,E1_PARCIRF,E1_BASECSL,E1_VRETISS,E1_SCORGP,E1_FRETISS,E1_TXMDCOR,E1_SATBIRF,E1_TIPREG,E1_CONEMP,E1_VERCON,E1_SUBCON,E1_VERSUB,E1_PLLOTE,E1_PLOPELT,E1_CODRDA,E1_FORMREC,E1_BCOCLI,E1_NUMCON,E1_AGECLI,E1_CTACLI,E1_VRETIRF,E1_FLCREDF,E1_MLFWSL,E1_XVALGAR,E1_XATUVCT,E1_MDCRON,E1_MDCONTR,E1_MEDNUME,E1_MDPLANI,E1_MDPARCE,E1_MDREVIS,E1_NUMMOV,E1_NODIA,E1_RETCNTR,E1_MDDESC,E1_DOCTEF,E1_MDBONI,E1_MDMULT,E1_DIACTB,E1_SABTIRF,E1_XMAILPR,E1_XPEDVRA,E1_XDELHIS,E1_VLMINIS,E1_CODISS,E1_BASEINS,E1_PARCFAC,E1_BASEIRF,E1_PARCFAB,E1_FABOV,E1_TITPAI,E1_SEQBX,E1_BASEISS,E1_FACS,E1_XFLDEPS,E1_XCTDEPS,E1_XSEGAV,E1_XORDPED,E1_XTRAY,E1_NUMPRO,E1_INDPRO,E1_CODIRRF,E1_TPDESC,E1_XCAMPAN,E1_XCVDACA,E1_PREFORI,E1_RELATO,E1_MULTDIA,E1_TURMA,E1_IDLAN,E1_JURFAT,E1_IDAPLIC,E1_PROCEL,E1_NOPER,E1_SERVICO,E1_IDBOLET,E1_VLBOLP,E1_LTCXA,E1_NUMINSC,E1_TPDP,E1_PARTPDP,E1_NSUTEF,E1_XPEFIN,E1_XDTIPFI,E1_XDTEPFI,E1_XBOLPDF,E1_XPDFVER,E1_XREFERE,E1_PRINSS,E1_PRISS,E1_XIDTRAN,E1_XRFTRAN,E1_XIDTRA,E1_XMARKTR,E1_CTRBCO,E1_IDMOV,E1_RATFIN,E1_FAMAD,E1_PARCFAM,E1_FMPEQ,E1_PARCFMP,E1_PRODUTO,E1_PERLET,E1_CHAVENF,E1_XDATALT,E1_XVALEP,E1_XVLRVP,E1_XMSGCMP,E1_CODRET,D_E_L_E_T_,R_E_C_N_O_,R_E_C_D_E_L_,E1_FUNDESA,E1_IMAMT,E1_FASEMT,E1_PARFUND,E1_PARIMA,E1_PARFASE,E1_XPARECM,E1_XTPECM,E1_XDTACM,E1_XALTVEC,E1_DESCJUR,E1_CCUSTO,E1_CDRETCS,E1_CDRETIR,E1_CLVL,E1_ITEMCTA,E1_CONHTL,E1_TCONHTL,E1_TPESOC,E1_CNO,E1_SDOC,E1_SDOCREC,E1_CODSERV,E1_VRETBIS,E1_BTRISS,E1_MSEXP,E1_PARCIMA,E1_IMA,E1_BOLETO,E1_MSDL FROM SE1200 (NOLOCK) WHERE 1=1 AND SE1200.D_E_L_E_T_ = '' AND E1_EMISSAO BETWEEN '20000101' AND '20220206'",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SE1200",
+            "table_name": "SE1200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "E1_BAIXA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_CARTVAL",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DATABOR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DATAEDI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTACRED",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTDESC1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTDESC2",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTDESC3",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTDISPO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTFATUR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_DTVARIA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_EMIS1",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_EMISSAO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_LIDESCF",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_MOVIMEN",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_VENCORI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_VENCREA",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_VENCTO",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XALTVEC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XDATALT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XDTACM",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XDTEPFI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XDTIPFI",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XMAILPR",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "E1_XSEGAV",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "E1_FILIAL",
+                    "E1_PREFIXO",
+                    "E1_NUM",
+                    "E1_PARCELA",
+                    "E1_TIPO",
+                    "R_E_C_D_E_L_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SX5200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SX5200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SX5200",
+            "table_name": "SX5200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SBM200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SBM200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SBM200",
+            "table_name": "SBM200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "ZD8200",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "ZD8200",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/ZD8200",
+            "table_name": "ZD8200",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "order_column": "DT_IMPORT"
+            }
+        }
+    }
+]

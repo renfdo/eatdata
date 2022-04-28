@@ -1,0 +1,526 @@
+[
+    {
+        "job_name": "DA1020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "DA1020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/DA1020",
+            "table_name": "DA1020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "RenameCast",
+                        "parameters": [
+                            {
+                                "column_name": "DA1_PERDES",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_PERDES"
+                            },
+                            {
+                                "column_name": "DA1_ATIVO",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_ATIVO"
+                            },
+                            {
+                                "column_name": "DA1_FRETE",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_FRETE"
+                            },
+                            {
+                                "column_name": "DA1_ESTADO",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_ESTADO"
+                            },
+                            {
+                                "column_name": "DA1_INDLOT",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_INDLOT"
+                            },
+                            {
+                                "column_name": "DA1_DATVIG",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_DATVIG"
+                            },
+                            {
+                                "column_name": "DA1_USERGI",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_USERGI"
+                            },
+                            {
+                                "column_name": "DA1_PRCMAX",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_PRCMAX"
+                            },
+                            {
+                                "column_name": "D_E_L_E_T_",
+                                "data_type": "Float",
+                                "new_column_name": "D_E_L_E_T_"
+                            },
+                            {
+                                "column_name": "DA1_XTRAY",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XTRAY"
+                            },
+                            {
+                                "column_name": "DA1_XPONTA",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XPONTA"
+                            },
+                            {
+                                "column_name": "DA1_XPVANT",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XPVANT"
+                            },
+                            {
+                                "column_name": "DA1_XPMANT",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XPMANT"
+                            },
+                            {
+                                "column_name": "DA1_XMARGE",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XMARGE"
+                            },
+                            {
+                                "column_name": "DA1_XDTVIG",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XDTVIG"
+                            },
+                            {
+                                "column_name": "DA1_XTPDES",
+                                "data_type": "Float",
+                                "new_column_name": "DA1_XTPDES"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "DA1_XDTVIG",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "DA1_DATVIG",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "DA1_XDTCAD",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "DA1_XDTALT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "DA1_DTUMOV",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "PBX020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "PBX020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/PBX020",
+            "table_name": "PBX020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "PBX_DTREAL",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PBX_DTCONS",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PBX_DTDELT",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PBX_DTPCMX",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PBX_DTOFIC",
+                                "source_format": "yyyyMMdd"
+                            },
+                            {
+                                "column_name": "PBX_DCBRAS",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "PCH020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "PCH020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/PCH020",
+            "table_name": "PCH020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "CastDate",
+                        "parameters": [
+                            {
+                                "column_name": "PCH_EMISSA",
+                                "source_format": "yyyyMMdd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "PCI020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "PCI020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/PCI020",
+            "table_name": "PCI020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "SB6020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SB6020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SB6020",
+            "table_name": "SB6020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "R_E_C_N_O_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SC7020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SC7020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SC7020",
+            "table_name": "SC7020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "R_E_C_N_O_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SDA020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SDA020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SDA020",
+            "table_name": "SDA020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "R_E_C_N_O_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SE2020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SE2020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SE2020",
+            "table_name": "SE2020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Upsert",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ],
+                "key_column": [
+                    "R_E_C_N_O_"
+                ],
+                "order_column": "DT_IMPORT"
+            }
+        }
+    },
+    {
+        "job_name": "SYD020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SYD020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SYD020",
+            "table_name": "SYD020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "job_name": "SZW020",
+        "system": "protheus",
+        "source": {
+            "type": "jdbc",
+            "dbtype": "sqlserver",
+            "secret_name": "secret-sqlserver-dadosadv-financeiro",
+            "table": "SZW020",
+            "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+            "options": {
+                "batchsize": "10000",
+                "fetchsize": "50000"
+            }
+        },
+        "destination": {
+            "path": "protheus/SZW020",
+            "table_name": "SZW020",
+            "raw": {
+                "database": "protheus_raw"
+            },
+            "trusted": {
+                "ingest_type": "Replace",
+                "database": "protheus_trusted",
+                "transformations": [
+                    {
+                        "name": "Trim",
+                        "parameters": [
+                            {
+                                "column_name": "*"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+]
